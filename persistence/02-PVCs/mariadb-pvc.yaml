@@ -1,0 +1,21 @@
+#
+# Advanced Kubernetes training by Bitnami
+#
+# Exercise: Add Sealed Secrets to MariaDB + WordPress deployment
+#
+# MariaDB Persistent Volume Claim
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mariadb-pvc
+  # We use labels here to classify the service itself as well
+  labels:
+    app: wordpress
+    type: db
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
