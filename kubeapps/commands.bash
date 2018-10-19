@@ -11,7 +11,7 @@ KUBEAPPS_DOMAIN="kubeapps.custom.domain"
 ## It's neccessary to create a serviceAccount/ClusterRoleBinding to allow
 ## Tiller to deploy charts on the cluster
 kubectl apply -f helm-service-account.yaml
-kubectl apply -f helm-cluter-role-binding.yaml
+kubectl apply -f helm-cluster-role-binding.yaml
 ## Then, init helm with the corresponding serviceAccount
 helm init --service-account helm
 
@@ -20,10 +20,10 @@ helm init --service-account helm
 #######################
 helm install --name kubeapps --namespace kubeapps bitnami/kubeapps \
   --set ingress.enabled=true \
+  --set ingress.certManager=true \
   --set ingress.hosts[0].name=$KUBEAPPS_DOMAIN \
   --set ingress.hosts[0].tls=true \
-  --set ingress.hosts[0].tlsSecret=kubeapps-tls \
-  --set ingress.hosts[0].certManager=true
+  --set ingress.hosts[0].tlsSecret=kubeapps-tls
 ## Create serviceAccount for user 'example' and obtain token
 TARGET_NAMESPACE='default'
 kubectl create --namespace $TARGET_NAMESPACE serviceaccount example
