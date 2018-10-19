@@ -1,0 +1,30 @@
+{
+  "apiVersion": "apps/v1beta1",
+  "kind": "Deployment",
+  "metadata": {
+    "name": "frontend-wp"
+  },
+  "spec": {
+    "replicas": 2,
+    "template": {
+      "spec": {
+        "containers": [
+          {
+            "name": "wp",
+            "image": "bitnami/wordpress",
+            "env": [
+              {
+                "name": "WORDPRESS_DATABASE_NAME",
+                "value": "bitnami_wordpress"
+              },
+              {
+                "name": "ALLOW_EMPTY_PASSWORD",
+                "value": "yes"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
