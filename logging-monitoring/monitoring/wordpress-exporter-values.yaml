@@ -1,0 +1,37 @@
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "9117"
+
+wordpressPassword: bitnami123
+mariadb:
+  db:
+    password: testtest123
+  rootUser:
+    password: testtest123
+  metrics:
+    enabled: true
+
+sidecars:
+- name: exporter
+  image: bitnami/python
+  imagePullPolicy: Always
+  ports:
+  - name: metrics
+    containerPort: 9117
+  command:
+  - bash
+  - -ec
+  - |-
+    #!/bin/bash
+    echo Installing jq
+    install_packages jq
+    python -m http.server 9117 &
+    while true;do
+      USERS=$(curl 127.0.0.1/wp-json/wp/v2/users | jq '. | length')
+      COMMENTS=$(curl 127.0.0.1/wp-json/wp/v2/users | jq '. | length')
+      echo "wp_user $USERS" > /tmp/metrics
+      echo "wp_comments $COMMENTS" >> /tmp/metrics
+      cp /tmp/metrics .
+      sleep 5
+    done    
+

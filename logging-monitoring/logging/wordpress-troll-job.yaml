@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: wordpress-troll
+spec:
+  template:
+    metadata:
+      name: wordpress-troll
+    spec:
+      containers:
+      - name: backup
+        image: bitnami/mariadb
+        command:
+         - "bin/bash"
+         - "-c"
+         - | 
+           echo LETS TROLL
+           for i in {1..10000};do
+             echo trolling attempt $i
+             curl -L example-monitoring-wordpress/wp-admin || true &
+           done
+           wait
+      restartPolicy: Never

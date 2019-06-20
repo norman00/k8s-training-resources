@@ -1,0 +1,30 @@
+alertmanagerFiles:
+  alertmanager.yml:
+    global:
+      slack_api_url: 'SLACK_API'
+
+    route:
+      receiver: 'slack-notifications'
+      group_by: [alertname, datacenter, app]
+
+    receivers:
+    - name: 'slack-notifications'
+      slack_configs:
+      - channel: '#alerts'
+        text: 'ALERT!\nsummary: {{ .CommonAnnotations.summary }}\ndescription: {{ .CommonAnnotations.description }}'
+
+serverFiles:
+  ## Alerts configuration
+  ## Ref: https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/
+  alerts:
+    groups:
+    - name: Instances
+      rules:
+        - alert: MySQLAccess
+          expr: "mysql_global_status_access_denied_errors > 10"
+          for: 10s
+          labels:
+            severity: page
+          annotations:
+            description: 'There are too many instances accessing mysql'
+            summary: 'Instance mysql compromised'

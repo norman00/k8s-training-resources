@@ -14,7 +14,7 @@ kubectl create -f yaml/02-db-pod.yaml
 
 # Check the resource quota usage
 
-kubectl get resourcequota -n api-team api-team-quota -o yaml
+kubectl get resourcequota -n team-api api-team-quota -o yaml
 
 # Let us try to deploy another database
 

@@ -1,0 +1,32 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mysql-backup
+spec:
+  template:
+    metadata:
+      name: mysql-backup
+    spec:
+      containers:
+      - name: backup
+        image: bitnami/mariadb
+        env:
+        - name: MARIADB_HOST
+          value: "example-monitoring-mariadb"
+        - name: MARIADB_PORT
+          value: "3306"
+        - name: MARIADB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: "example-monitoring-mariadb"
+              key: "mariadb-root-password"
+        command:
+         - "bin/bash"
+         - "-c"
+         - | 
+           ts=$(date +%s%N)
+           mysqldump -h$MARIADB_HOST -p$MARIADB_PASSWORD -uroot bitnami_wordpress > /tmp/backup.sql
+           finaltime=$((($(date +%s%N) - $ts)/1000000))
+           echo wp_backup_time $finaltime | curl --data-binary @- http://prometheus-pushgateway.monitoring:9091/metrics/job/wordpress_backup
+           echo finished
+      restartPolicy: Never

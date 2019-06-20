@@ -1,6 +1,6 @@
 # First let us deploy a helm chart
 
-helm install stable/wordpress
+helm install stable/wordpress --name mywp
 
 # Complete the missing information in yaml/example_policy.yaml and then deploy it
 

@@ -1,0 +1,15 @@
+resources:
+  requests:
+    memory: 300Mi
+    cpu: 300m
+  limits:
+    memory: 300Mi
+    cpu: 300m
+wordpressPassword: bitnami123
+mariadb:
+  db:
+    password: testtest123
+  rootUser:
+    password: testtest123
+  metrics:
+    enabled: true
